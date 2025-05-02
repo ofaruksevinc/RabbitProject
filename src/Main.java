@@ -56,7 +56,7 @@ public class Main {
                 case 'R': // Sağ 
                     rabbit.turnRight();
                     System.out.println("Tavşan sağa döndü. Yeni Yön: " + rabbit.getDirection());
-                    grid.display(rabbit.getPosition())
+                    grid.display(rabbit.getPosition());
                     continue; 
                 case 'L': // Sol 
                     rabbit.turnLeft();
