@@ -22,27 +22,23 @@ public class Main {
 
         System.out.println(size + "x" + size + " boyutunda orman oluşturuldu.");
 
-        // Initialize Grid and Rabbit
         Grid grid = new Grid(size);
         Rabbit rabbit = new Rabbit(size);
 
-        // Display initial state
         System.out.println("Başlangıç durumu:");
         grid.display(rabbit.getPosition());
         System.out.println("Tavşan ('T') Başlangıç Yönü: " + rabbit.getDirection());
         System.out.println("Hedef: Tavşan Deliği ('H')");
 
-        // Get scenario input
         System.out.println("Senaryoyu girin (örn: N,N,L,J,N,N,İ,P,J):");
         String scenario = scanner.nextLine().toUpperCase(); 
         String[] moves = scenario.split(",");
 
-        // Process scenario
         boolean alive = true;
         boolean success = false;
 
         for (String move : moves) {
-            if (move.isEmpty()) continue; // Skip empty parts if input is like N,,L
+            if (move.isEmpty()) continue; 
 
             char command = move.charAt(0);
             Position currentPos = rabbit.getPosition();
@@ -51,38 +47,37 @@ public class Main {
             System.out.println("\nKomut: " + command);
 
             switch (command) {
-                case 'N': // İleri (Forward)
+                case 'N': // İleri 
                     nextPos = rabbit.getNextPositionForward();
                     break;
-                case 'P': // Geri (Backward)
+                case 'P': // Geri 
                     nextPos = rabbit.getNextPositionBackward();
                     break;
-                case 'R': // Sağ (Right)
+                case 'R': // Sağ 
                     rabbit.turnRight();
                     System.out.println("Tavşan sağa döndü. Yeni Yön: " + rabbit.getDirection());
-                    grid.display(rabbit.getPosition()); // Show grid after turn
-                    continue; // Turn doesn't involve moving to a new cell
-                case 'L': // Sol (Left)
+                    grid.display(rabbit.getPosition())
+                    continue; 
+                case 'L': // Sol 
                     rabbit.turnLeft();
                     System.out.println("Tavşan sola döndü. Yeni Yön: " + rabbit.getDirection());
-                    grid.display(rabbit.getPosition()); // Show grid after turn
-                    continue; // Turn doesn't involve moving to a new cell
-                case 'J': // Zıpla (Jump)
-                case 'İ': // Eğil (Duck - Using 'I' for ASCII compatibility)
-                    nextPos = rabbit.getNextPositionForward(); // Jump/Duck is always forward
+                    grid.display(rabbit.getPosition()); 
+                    continue; 
+                case 'J': // Zıpla 
+                case 'İ': // Eğil 
+                    nextPos = rabbit.getNextPositionForward();
                     break;
                 default:
                     System.out.println("Geçersiz komut: " + command);
                     continue;
             }
 
-            // Check if the calculated next position is valid
             if (nextPos == null || !grid.isValidPosition(nextPos)) {
                 System.out.println("Hareket başarısız: Ormanın dışına çıkılamaz.");
-                continue; // Skip to the next move
+                continue; 
             }
 
-            // Check the content of the target cell
+
             char targetCellContent = grid.getCell(nextPos);
             System.out.println("Hedef Hücre: (" + nextPos.x() + "," + nextPos.y() + ") İçerik: " + targetCellContent);
 
@@ -92,9 +87,9 @@ public class Main {
                 case Grid.FOX:
                     System.out.println("OYUN BİTTİ! Tavşan yakalandı (" + targetCellContent + ").");
                     alive = false;
-                    rabbit.move(nextPos); // Move rabbit to the death spot for visualization
+                    rabbit.move(nextPos); 
                     break;
-                case Grid.WIRE: // Dikenli Tel
+                case Grid.WIRE:
                     if (command == 'İ') {
                         System.out.println("Tavşan telin altından eğilerek geçti.");
                         moveSuccessful = true;
@@ -111,7 +106,7 @@ public class Main {
                     }
                     break;
                 case Grid.HOLE: // Tavşan Deliği
-                    if (command == 'N' || command == 'P') { // Can only enter hole by moving forward/backward
+                    if (command == 'N' || command == 'P') {
                          System.out.println("BAŞARILI! Tavşan deliğe ulaştı!");
                          moveSuccessful = true;
                          success = true;
@@ -120,7 +115,7 @@ public class Main {
                     }
                     break;
                 case Grid.EMPTY:
-                     if (command == 'N' || command == 'P') { // Can only move to empty with N/P
+                     if (command == 'N' || command == 'P') { 
                         System.out.println("Tavşan boş bir alana ilerledi.");
                         moveSuccessful = true;
                     } else {
@@ -129,7 +124,6 @@ public class Main {
                     break;
                 default:
                     System.out.println("Beklenmeyen hücre içeriği: " + targetCellContent);
-                    // Treat as blocked for safety?
                     break;
             }
 
@@ -137,15 +131,13 @@ public class Main {
                 rabbit.move(nextPos);
             }
 
-            // Display grid after attempting the move
             grid.display(rabbit.getPosition());
 
             if (!alive || success) {
-                break; // End simulation if rabbit died or reached the hole
+                break; 
             }
         }
 
-        // Final result check (in case the scenario ends without reaching the hole or dying)
         System.out.println("\n--- Senaryo Sonu ---");
         if (success) {
             System.out.println("SONUÇ: BAŞARILI! Tavşan evine ulaştı.");
@@ -159,7 +151,7 @@ public class Main {
             System.out.println("SONUÇ: BAŞARISIZ! Tavşan deliğe ulaşamadı.");
         }
         System.out.println("Tavşanın son konumu: (" + rabbit.getPosition().x() + "," + rabbit.getPosition().y() + ")");
-        grid.display(rabbit.getPosition()); // Show final grid state
+        grid.display(rabbit.getPosition()); 
 
         scanner.close();
     }

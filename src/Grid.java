@@ -6,7 +6,6 @@ public class Grid {
     private final Position holePosition;
     private static final Random random = new Random();
 
-    // Define characters for items on the board
     public static final char EMPTY = '.';
     public static final char RABBIT = 'T';
     public static final char HOLE = 'H';
@@ -18,7 +17,6 @@ public class Grid {
     public Grid(int size) {
         this.size = size;
         this.board = new char[size][size];
-        // Hole position: Bottom-right (H1 equivalent -> x=size-1, y=0)
         this.holePosition = new Position(size - 1, 0);
         initializeBoard();
         placeObstacles();
@@ -30,11 +28,9 @@ public class Grid {
                 board[y][x] = EMPTY;
             }
         }
-        // Place the hole
         updateCell(holePosition, HOLE);
     }
 
-    // Place obstacles randomly, ensuring no overlaps and respecting max counts
     private void placeObstacles() {
         placeObstacleType(WOLF, 4); // Max 4 Kurt
         placeObstacleType(FOX, 4);  // Max 4 Tilki
@@ -49,28 +45,24 @@ public class Grid {
             int y = random.nextInt(size);
             Position pos = new Position(x, y);
 
-            // Ensure the cell is empty and not the hole or potential rabbit start
+
             if (getCell(pos) == EMPTY && !pos.equals(holePosition) && !(x==0 && y==size-1)) {
                  updateCell(pos, obstacleType);
                  count++;
             }
-            // Basic protection against infinite loops if the board is too full,
-            // though unlikely with current constraints.
-            // A more robust solution might track placement attempts.
+            
         }
     }
 
     public char getCell(Position pos) {
         if (isValidPosition(pos)) {
-            // IMPORTANT: Array access is board[y][x], but Position is (x, y)
             return board[pos.y()][pos.x()];
         }
-        return ' ';// Indicate out of bounds
+        return ' ';
     }
 
     public void updateCell(Position pos, char content) {
          if (isValidPosition(pos)) {
-            // IMPORTANT: Array access is board[y][x], but Position is (x, y)
             board[pos.y()][pos.x()] = content;
         }
     }
@@ -87,19 +79,16 @@ public class Grid {
         return size;
     }
 
-    // Method to display the grid (optional, but useful for debugging/visualization)
     public void display(Position rabbitPos) {
         System.out.println("--- Orman --- C: Sütun, R: Satır (0'dan başlar) ---");
-        // Print column headers (A, B, C...)
         System.out.print("   ");
         for(int x = 0; x < size; x++) {
              System.out.print((char)('A' + x) + " ");
         }
         System.out.println();
 
-        // Print rows (8, 7, 6...) with content
         for (int y = size - 1; y >= 0; y--) {
-             System.out.printf("%2d ", y + 1); // Row number (1-indexed)
+             System.out.printf("%2d ", y + 1); 
             for (int x = 0; x < size; x++) {
                 Position currentPos = new Position(x, y);
                 if (currentPos.equals(rabbitPos)) {
